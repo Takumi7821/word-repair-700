@@ -128,7 +128,10 @@ async function callGemini(
       responseMimeType: "application/json",
       responseSchema,
       temperature: 0.5,
-      maxOutputTokens: 700,
+      maxOutputTokens: 1024,
+      // This task is short structured extraction, not multi-step reasoning — disable
+      // "thinking" so its token budget doesn't eat into (and truncate) the JSON output.
+      thinkingConfig: { thinkingBudget: 0 },
       abortSignal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     },
   });
