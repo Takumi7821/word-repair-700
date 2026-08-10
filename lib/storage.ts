@@ -221,6 +221,25 @@ export function updateLatestSessionSummary(
   return profile;
 }
 
+/**
+ * Records a completed simple quiz (English→Japanese or Japanese→English) session.
+ * Unlike finalizeSession, this doesn't touch latestSessionResult — those quiz modes
+ * have no AI diagnosis, Mistake DNA, or coach summary to show on the Result screen.
+ */
+export function recordSimpleSession(totalQuestions: number, correctCount: number): UserProfile {
+  const wordMap = getWordHistoryMap();
+  const profile = getUserProfile();
+
+  profile.totalSessions += 1;
+  profile.totalQuestions += totalQuestions;
+  profile.totalCorrect += correctCount;
+  profile.masteredWords = countByStatus(wordMap, "mastered");
+  profile.repairedWords = countEverRepaired(wordMap);
+
+  saveUserProfile(profile);
+  return profile;
+}
+
 export function getAllWordHistories(): WordHistory[] {
   const map = getWordHistoryMap();
   return WORDS.map((w) => map[w.id] ?? defaultWordHistory(w.id));

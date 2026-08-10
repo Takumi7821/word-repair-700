@@ -10,8 +10,8 @@ const sora = Sora({
 });
 
 export const metadata: Metadata = {
-  title: "WORD REPAIR 700",
-  description: "間違いを、次の3問で直す。TOEIC700点を目指す社会人向けAI英単語コーチ。",
+  title: "TOEIC700 MASTER",
+  description: "AI診断・4択クイズ・暗記カードで鍛える、TOEIC700点対策の英単語学習アプリ。",
 };
 
 export default function RootLayout({

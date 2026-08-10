@@ -1,10 +1,17 @@
-# WORD REPAIR 700
+# TOEIC700 MASTER
 
-> 間違いを、次の3問で直す。
+> 今日も、700点に近づく。
 
-TOEIC700点を目指す社会人向けのAI英単語学習アプリです。単なる4択クイズではなく、**Gemini APIがユーザーの誤答原因を診断し、同じ学習セッション内でレベルアップ問題として弱点を突破する**体験を中核に据えています。
+TOEIC700点を目指す社会人向けの英単語学習アプリです。4つの学習モードを備えています。
 
-## コンセプト
+1. **AI診断セッション** — 単なる4択クイズではなく、Gemini APIがユーザーの誤答原因を診断し、同じ学習セッション内でレベルアップ問題として弱点を突破する体験が中核
+2. **英→日 4択クイズ** — 単語を見て意味を選ぶ、シンプルな4択（AI呼び出しなし）
+3. **日→英 4択クイズ** — 意味から単語を選ぶ、逆方向の4択（AI呼び出しなし）
+4. **暗記カード** — カードをめくって意味を確認し、習得状況で絞り込みながら反復できる
+
+すべてのモードは同じ300語データセットと学習履歴（`localStorage`）を共有しており、どのモードで学習しても習得済み単語数・700 READY・マイルストーンに反映されます。
+
+## AI診断セッションのコンセプト
 
 1. 1回10問・8〜10分のセッションで学習
 2. 通常問題（ビジネス文脈の穴埋め4択）に誤答すると、Geminiが「なぜ間違えたか」を5カテゴリ（語彙不足・類義語混同・品詞混同・文脈判断・記憶の弱化）で診断
@@ -64,21 +71,25 @@ APIキーは `app/api/*/route.ts` 内（サーバー専用）でのみ参照さ�
 
 ```
 app/
-  page.tsx            Home（700 READY・マイルストーン進捗・今日の状態・CTA・データリセット）
-  session/page.tsx     10問セッション（出題・診断・レベルアップ問題・KNOWN/WEAK FOUND/LEVEL UP）
-  result/page.tsx       結果画面（正答率・レベルアップ数・Mistake DNA・マイルストーン達成演出・Gemini総括）
+  page.tsx            Home（学習モード選択・700 READY・マイルストーン進捗・データリセット）
+  session/page.tsx     AI診断セッション（出題・診断・レベルアップ問題・KNOWN/WEAK FOUND/LEVEL UP）
+  result/page.tsx       AI診断セッションの結果画面（正答率・Mistake DNA・マイルストーン達成演出・Gemini総括）
+  quiz-en-ja/page.tsx    英→日 4択クイズ
+  quiz-ja-en/page.tsx    日→英 4択クイズ
+  flashcards/page.tsx    暗記カード（フリップカード・習得状況フィルタ）
   words/page.tsx         単語帳（300語の習得状況一覧・フィルタ）
   api/diagnose/route.ts   誤答診断 + レベルアップ問題生成API
   api/summary/route.ts     セッション総括生成API
 lib/
   types.ts             共有の型定義
   words.ts / words-data/  TOEIC700レベル・ビジネス文脈300語のデータセット
-  quiz-engine.ts        出題選択・4択生成・レベルアップ問題の再出題スケジューリング
+  quiz-engine.ts        AI診断セッションの出題選択・4択生成・レベルアップ問題の再出題スケジューリング
+  simple-quiz-engine.ts  英↔日4択クイズの出題選択・ディストラクタ生成（AI不使用）
   storage.ts             localStorage層（学習履歴・Mistake DNA集計・700 READY算出・データリセット）
   milestones.ts           習得50語ごとのマイルストーン進捗計算
   gemini.ts               Gemini API呼び出し（サーバー専用）
   fallback.ts             オフライン時の診断・総括生成ロジック
-components/            UIコンポーネント
+components/            UIコンポーネント（SimpleQuizSession・FlashCard・ModeCard など）
 ```
 
 ## 学習履歴（localStorage）

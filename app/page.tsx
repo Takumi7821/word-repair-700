@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { MilestoneTrack } from "@/components/MilestoneTrack";
+import { ModeCard } from "@/components/ModeCard";
 import { ReadyGauge } from "@/components/ReadyGauge";
 import { getMilestoneProgress, type MilestoneProgress } from "@/lib/milestones";
 import {
@@ -53,15 +53,39 @@ export default function HomePage() {
     <main className="flex flex-col gap-6 pt-4">
       <header>
         <p className="font-display text-xs font-bold uppercase tracking-[0.2em] text-primary">
-          Word Repair 700
+          TOEIC700 MASTER
         </p>
         <h1 className="mt-2 text-2xl font-extrabold text-ink sm:text-3xl">
-          間違いを、次の3問で直す。
+          今日も、700点に近づく。
         </h1>
         <p className="mt-2 text-sm text-ink/60">
-          TOEIC700点を目指す社会人のための、AI弱点レベルアップ型の英単語トレーニング。
+          AI診断・4択クイズ・暗記カードで鍛える、社会人のためのTOEIC700点対策。
         </p>
       </header>
+
+      <div className="flex flex-col gap-3">
+        <ModeCard
+          href="/session"
+          title="AI診断セッション"
+          description="間違いを、次の3問で突破する。10問・8〜10分。"
+          badge="おすすめ"
+          featured
+        />
+        <div className="grid grid-cols-2 gap-3">
+          <ModeCard
+            href="/quiz-en-ja"
+            title="英→日 4択クイズ"
+            description="単語を見て意味を選ぶ。"
+          />
+          <ModeCard
+            href="/quiz-ja-en"
+            title="日→英 4択クイズ"
+            description="意味から単語を選ぶ。"
+          />
+          <ModeCard href="/flashcards" title="暗記カード" description="カードをめくって覚える。" />
+          <ModeCard href="/words" title="単語帳" description="300語の習得状況を見る。" />
+        </div>
+      </div>
 
       {data ? (
         <>
@@ -103,22 +127,6 @@ export default function HomePage() {
       ) : (
         <div className="h-40 animate-pulse rounded-2xl bg-ink/5" />
       )}
-
-      <div className="mt-2 flex flex-col gap-3">
-        <Link
-          href="/session"
-          className="rounded-full bg-gradient-to-b from-primary to-primaryDark px-6 py-4 text-center font-display text-base font-bold text-white shadow-lg shadow-primary/30 transition-transform active:scale-[0.98]"
-        >
-          今日の10問を始める
-        </Link>
-        <p className="text-center text-xs text-ink/40">目安時間 8〜10分</p>
-        <Link
-          href="/words"
-          className="rounded-full border border-ink/15 px-6 py-3 text-center text-sm font-medium text-ink/70"
-        >
-          単語帳を見る
-        </Link>
-      </div>
 
       {hasPlayedBefore && (
         <button
