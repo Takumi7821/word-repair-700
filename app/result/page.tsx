@@ -6,6 +6,7 @@ import { CoachSummary } from "@/components/CoachSummary";
 import { LoadingState } from "@/components/LoadingState";
 import { MistakeDnaBars } from "@/components/MistakeDnaBars";
 import { ReadyGauge } from "@/components/ReadyGauge";
+import { milestoneCrossed } from "@/lib/milestones";
 import {
   getMistakeDnaPercentages,
   getTopMistakeType,
@@ -24,6 +25,7 @@ export default function ResultPage() {
   const [dnaPercentages, setDnaPercentages] = useState<Record<ErrorType, number> | null>(null);
   const [topType, setTopType] = useState<ErrorType | null>(null);
   const [masteredWords, setMasteredWords] = useState(0);
+  const [newMilestone, setNewMilestone] = useState<number | null>(null);
   const [isSummaryLoading, setIsSummaryLoading] = useState(false);
   const [notFound, setNotFound] = useState(false);
 
@@ -39,6 +41,7 @@ export default function ResultPage() {
     setDnaPercentages(getMistakeDnaPercentages(profile.mistakeProfile));
     setTopType(getTopMistakeType(profile.mistakeProfile));
     setMasteredWords(profile.masteredWords);
+    setNewMilestone(milestoneCrossed(latestResult.previousMasteredWords, profile.masteredWords));
 
     if (latestResult.coachSummary) return;
 
@@ -68,7 +71,7 @@ export default function ResultPage() {
         setSessionResult((prev) => (prev ? { ...prev, coachSummary: summary, coachSummarySource: source } : prev));
       })
       .catch(() => {
-        const fallbackText = `今日は${latestResult.correctCount}問正解、${latestResult.repairedCount}件の弱点を修復しました。`;
+        const fallbackText = `今日は${latestResult.correctCount}問正解、${latestResult.repairedCount}件レベルアップしました。`;
         updateLatestSessionSummary(fallbackText, "fallback");
         setSessionResult((prev) =>
           prev ? { ...prev, coachSummary: fallbackText, coachSummarySource: "fallback" } : prev
@@ -81,7 +84,10 @@ export default function ResultPage() {
     return (
       <main className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
         <p className="text-sm text-ink/60">まだ今日のセッション結果がありません。</p>
-        <Link href="/" className="rounded-full bg-ink px-5 py-3 text-sm font-semibold text-paper">
+        <Link
+          href="/"
+          className="rounded-full bg-gradient-to-b from-primary to-primaryDark px-5 py-3 text-sm font-semibold text-white shadow-md shadow-primary/25"
+        >
           ホームに戻る
         </Link>
       </main>
@@ -100,31 +106,46 @@ export default function ResultPage() {
   return (
     <main className="flex flex-col gap-6 pt-4">
       <header>
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Result</p>
-        <h1 className="mt-2 text-2xl font-extrabold text-ink">今日もひとつ、直しました。</h1>
+        <p className="font-display text-xs font-bold uppercase tracking-[0.2em] text-primary">
+          Result
+        </p>
+        <h1 className="mt-2 text-2xl font-extrabold text-ink">今日もひとつ、前進しました。</h1>
       </header>
 
+      {newMilestone !== null && (
+        <div className="animate-levelup-pop rounded-2xl border border-primary/25 bg-gradient-to-br from-primary to-primaryDark p-5 text-center text-white shadow-lg shadow-primary/30">
+          <p className="font-display text-sm font-bold uppercase tracking-wide text-white/80">
+            Milestone Reached
+          </p>
+          <p className="mt-1 font-display text-2xl font-extrabold">
+            習得 {newMilestone} 語達成 🎉
+          </p>
+        </div>
+      )}
+
       <div className="grid grid-cols-3 gap-3">
-        <div className="rounded-2xl border border-ink/10 bg-white/70 p-3 text-center">
-          <p className="text-xl font-extrabold text-ink">
+        <div className="rounded-2xl border border-ink/8 bg-white/80 p-3 text-center">
+          <p className="font-display text-xl font-extrabold text-ink">
             {sessionResult.correctCount}/{sessionResult.totalQuestions}
           </p>
           <p className="mt-1 text-[11px] text-ink/50">正解数 ({accuracyPercent}%)</p>
         </div>
-        <div className="rounded-2xl border border-repair/20 bg-repairSoft/60 p-3 text-center">
-          <p className="text-xl font-extrabold text-repair">{sessionResult.repairedCount}</p>
-          <p className="mt-1 text-[11px] text-repair/70">REPAIRED</p>
+        <div className="rounded-2xl border border-levelup/20 bg-levelupSoft/70 p-3 text-center">
+          <p className="font-display text-xl font-extrabold text-levelup">
+            {sessionResult.repairedCount}
+          </p>
+          <p className="mt-1 text-[11px] font-semibold text-levelup/70">LEVEL UP</p>
         </div>
-        <div className="rounded-2xl border border-ink/10 bg-white/70 p-3 text-center">
-          <p className="text-xl font-extrabold text-ink">{masteredWords}</p>
+        <div className="rounded-2xl border border-ink/8 bg-white/80 p-3 text-center">
+          <p className="font-display text-xl font-extrabold text-ink">{masteredWords}</p>
           <p className="mt-1 text-[11px] text-ink/50">習得済み単語</p>
         </div>
       </div>
 
       <ReadyGauge score={sessionResult.readyScore} />
 
-      <section className="rounded-2xl border border-ink/10 bg-white/70 p-5">
-        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink/50">
+      <section className="rounded-2xl border border-ink/8 bg-white/80 p-5">
+        <p className="mb-1 font-display text-xs font-bold uppercase tracking-wide text-ink/50">
           Your Mistake DNA
         </p>
         {topType && (
@@ -138,7 +159,10 @@ export default function ResultPage() {
       <CoachSummary summary={sessionResult.coachSummary} isLoading={isSummaryLoading} />
 
       <div className="flex flex-col gap-3">
-        <Link href="/" className="rounded-full bg-ink px-6 py-4 text-center text-base font-bold text-paper">
+        <Link
+          href="/"
+          className="rounded-full bg-gradient-to-b from-primary to-primaryDark px-6 py-4 text-center font-display text-base font-bold text-white shadow-lg shadow-primary/30"
+        >
           ホームに戻る
         </Link>
         <Link

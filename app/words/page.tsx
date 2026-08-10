@@ -9,9 +9,9 @@ import { WORDS } from "@/lib/words";
 
 const FILTERS: { value: MasteryStatus | "all"; label: string }[] = [
   { value: "all", label: "すべて" },
-  { value: "fragile", label: "修復待ち" },
+  { value: "fragile", label: "レベルアップ待ち" },
   { value: "learning", label: "学習中" },
-  { value: "repaired", label: "修復済み" },
+  { value: "repaired", label: "レベルアップ済み" },
   { value: "mastered", label: "習得済み" },
   { value: "new", label: "未着手" },
 ];
@@ -71,7 +71,7 @@ export default function WordsPage() {
             className={
               "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors " +
               (filter === f.value
-                ? "border-ink bg-ink text-paper"
+                ? "border-primary bg-primary text-white"
                 : "border-ink/15 bg-white/70 text-ink/60")
             }
           >

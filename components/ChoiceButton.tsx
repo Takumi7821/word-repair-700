@@ -9,17 +9,18 @@ type Props = {
 };
 
 export function ChoiceButton({ label, isSelected, isCorrectChoice, isAnswered, onClick }: Props) {
-  let stateClass = "border-ink/15 bg-white hover:border-accent/50 hover:bg-accentSoft/40";
+  let stateClass =
+    "border-ink/10 bg-white hover:border-primary/40 hover:bg-primarySoft/50 hover:-translate-y-0.5";
   if (isAnswered) {
     if (isCorrectChoice) {
-      stateClass = "border-accent bg-accentSoft text-accent";
+      stateClass = "border-success bg-successSoft text-success shadow-sm shadow-success/10";
     } else if (isSelected) {
-      stateClass = "border-weak bg-weakSoft text-weak";
+      stateClass = "border-weak bg-weakSoft text-weak shadow-sm shadow-weak/10";
     } else {
-      stateClass = "border-ink/10 bg-white/40 text-ink/40";
+      stateClass = "border-ink/8 bg-white/50 text-ink/35";
     }
   } else if (isSelected) {
-    stateClass = "border-accent bg-accentSoft/60";
+    stateClass = "border-primary bg-primarySoft/70";
   }
 
   return (
@@ -29,18 +30,18 @@ export function ChoiceButton({ label, isSelected, isCorrectChoice, isAnswered, o
       onClick={onClick}
       aria-pressed={isSelected}
       className={
-        "rounded-xl border px-4 py-3 text-left text-sm font-medium transition-colors disabled:cursor-default sm:text-base " +
+        "rounded-xl border px-4 py-3 text-left text-sm font-medium transition-all duration-150 disabled:cursor-default sm:text-base " +
         stateClass
       }
     >
       {label}
       {isAnswered && isCorrectChoice && (
-        <span className="ml-2 align-middle text-[10px] font-bold uppercase tracking-wide text-accent">
+        <span className="ml-2 align-middle font-display text-[10px] font-bold uppercase tracking-wide text-success">
           KNOWN
         </span>
       )}
       {isAnswered && isSelected && !isCorrectChoice && (
-        <span className="ml-2 align-middle text-[10px] font-bold uppercase tracking-wide text-weak">
+        <span className="ml-2 align-middle font-display text-[10px] font-bold uppercase tracking-wide text-weak">
           WEAK FOUND
         </span>
       )}

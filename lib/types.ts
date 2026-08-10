@@ -121,6 +121,7 @@ export type SessionResult = {
   mistakeDnaTop: ErrorType | null;
   sessionMistakeProfile: MistakeProfile;
   previousMistakeProfile: MistakeProfile;
+  previousMasteredWords: number;
   mistakes: SessionMistake[];
   coachSummary: string;
   coachSummarySource: "gemini" | "fallback";

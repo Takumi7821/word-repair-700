@@ -35,6 +35,13 @@ function writeJson<T>(key: string, value: T): void {
   }
 }
 
+/** Wipes all saved word history and profile stats. Irreversible. */
+export function resetAllProgress(): void {
+  if (!isBrowser()) return;
+  window.localStorage.removeItem(WORD_HISTORY_KEY);
+  window.localStorage.removeItem(USER_PROFILE_KEY);
+}
+
 function defaultUserProfile(): UserProfile {
   return {
     totalSessions: 0,

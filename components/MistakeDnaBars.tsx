@@ -12,9 +12,9 @@ export function MistakeDnaBars({ percentages }: Props) {
             <span>{ERROR_TYPE_LABEL_JA[type]}</span>
             <span className="font-semibold text-ink">{percentages[type]}%</span>
           </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-ink/10">
+          <div className="h-2 w-full overflow-hidden rounded-full bg-ink/8">
             <div
-              className="h-full rounded-full bg-accent transition-all"
+              className="h-full rounded-full bg-gradient-to-r from-primary to-primary/70 transition-all"
               style={{ width: `${percentages[type]}%` }}
             />
           </div>

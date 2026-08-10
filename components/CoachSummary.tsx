@@ -2,8 +2,8 @@ type Props = { summary: string; isLoading: boolean };
 
 export function CoachSummary({ summary, isLoading }: Props) {
   return (
-    <div className="rounded-2xl border border-ink/10 bg-white/70 p-5">
-      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink/50">
+    <div className="rounded-2xl border border-ink/8 bg-white/80 p-5 shadow-sm shadow-primary/5">
+      <p className="mb-2 font-display text-xs font-bold uppercase tracking-wide text-primary/70">
         Today&apos;s Coach
       </p>
       {isLoading ? (

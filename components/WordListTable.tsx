@@ -3,17 +3,17 @@ import type { MasteryStatus, Word, WordHistory } from "@/lib/types";
 const STATUS_LABEL: Record<MasteryStatus, string> = {
   new: "未着手",
   learning: "学習中",
-  fragile: "修復待ち",
-  repaired: "修復済み",
+  fragile: "レベルアップ待ち",
+  repaired: "レベルアップ済み",
   mastered: "習得済み",
 };
 
 const STATUS_CLASS: Record<MasteryStatus, string> = {
   new: "bg-ink/5 text-ink/50",
-  learning: "bg-accentSoft text-accent",
+  learning: "bg-primarySoft text-primary",
   fragile: "bg-weakSoft text-weak",
-  repaired: "bg-repairSoft text-repair",
-  mastered: "bg-accent text-white",
+  repaired: "bg-levelupSoft text-levelup",
+  mastered: "bg-primary text-white",
 };
 
 export type WordRow = { word: Word; history: WordHistory };
@@ -32,7 +32,7 @@ export function WordListTable({ rows }: { rows: WordRow[] }) {
           </div>
           <span
             className={
-              "shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold " +
+              "shrink-0 rounded-full px-2.5 py-1 font-display text-[11px] font-bold " +
               STATUS_CLASS[history.masteryStatus]
             }
           >

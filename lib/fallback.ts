@@ -137,7 +137,7 @@ export function fallbackSummary(request: SummaryRequest): string {
 
   const parts: string[] = [`今日は${total}問中${request.sessionCorrect}問正解でした。`];
   if (request.repairedCount > 0) {
-    parts.push(`${request.repairedCount}件の弱点をRepair問題で修復できました。`);
+    parts.push(`${request.repairedCount}件の弱点をレベルアップ問題で突破できました。`);
   }
   if (topLabel && mistakeWords) {
     parts.push(`特に${mistakeWords}などで${topLabel}が目立ちました。`);

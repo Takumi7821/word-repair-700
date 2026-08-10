@@ -7,9 +7,9 @@ type Props = {
 
 export function DiagnosisPanel({ diagnosis, isLoading }: Props) {
   return (
-    <div className="mt-4 rounded-2xl border border-weak/30 bg-weakSoft/50 p-4">
+    <div className="mt-4 rounded-2xl border border-weak/25 bg-weakSoft/60 p-4">
       <div className="mb-2 flex items-center gap-2">
-        <span className="rounded-full bg-weak px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-white">
+        <span className="rounded-full bg-weak px-2 py-0.5 font-display text-xs font-bold uppercase tracking-wide text-white">
           WEAK FOUND
         </span>
         {diagnosis && (

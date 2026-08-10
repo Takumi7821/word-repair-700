@@ -20,7 +20,7 @@ function renderBlankSentence(sentence: string) {
           {i < parts.length - 1 && (
             <span
               aria-hidden="true"
-              className="mx-1 inline-block min-w-[4.5rem] border-b-2 border-dashed border-ink/40 align-baseline"
+              className="mx-1 inline-block min-w-[4.5rem] border-b-2 border-dashed border-primary/40 align-baseline"
             >
               &nbsp;
             </span>
@@ -33,21 +33,21 @@ function renderBlankSentence(sentence: string) {
 
 const KIND_LABEL: Record<QuestionItem["kind"], string> = {
   normal: "通常問題",
-  repair: "REPAIR",
+  repair: "LEVEL UP",
   transfer: "TRANSFER",
 };
 
 export function QuestionCard({ question, selectedAnswer, isAnswered, onSelect }: Props) {
   return (
-    <div className="rounded-2xl border border-ink/10 bg-white/70 p-5 shadow-sm">
+    <div className="rounded-3xl border border-ink/8 bg-white/80 p-5 shadow-lg shadow-primary/5 backdrop-blur-sm">
       <div className="mb-3 flex items-center justify-between">
         <span
           className={
-            "rounded-full px-2.5 py-1 text-xs font-semibold tracking-wide " +
+            "rounded-full px-2.5 py-1 font-display text-xs font-bold tracking-wide " +
             (question.kind === "repair"
-              ? "bg-repairSoft text-repair"
+              ? "bg-levelupSoft text-levelup"
               : question.kind === "transfer"
-                ? "bg-accentSoft text-accent"
+                ? "bg-primarySoft text-primary"
                 : "bg-ink/5 text-ink/60")
           }
         >

@@ -64,13 +64,16 @@ export default function SessionPage() {
   );
   const [previousMistakeProfile, setPreviousMistakeProfile] =
     useState<MistakeProfile>(EMPTY_MISTAKE_PROFILE);
+  const [previousMasteredWords, setPreviousMasteredWords] = useState(0);
 
   const [isFinishing, setIsFinishing] = useState(false);
 
   useEffect(() => {
     const histories = getWordHistoryMap();
     setQueue(buildInitialQueue(histories));
-    setPreviousMistakeProfile(getUserProfile().mistakeProfile);
+    const profile = getUserProfile();
+    setPreviousMistakeProfile(profile.mistakeProfile);
+    setPreviousMasteredWords(profile.masteredWords);
     setReady(true);
   }, []);
 
@@ -118,7 +121,7 @@ export default function SessionPage() {
           )
         );
         setRepairBanner(
-          `${ERROR_TYPE_LABEL_JA[currentQuestion.repairMeta?.errorType ?? "context_gap"]}を1つ修復しました`
+          `${ERROR_TYPE_LABEL_JA[currentQuestion.repairMeta?.errorType ?? "context_gap"]}を1つ突破しました`
         );
       } else {
         recordAnswer({
@@ -260,6 +263,7 @@ export default function SessionPage() {
       mistakeDnaTop: getTopMistakeType(priorProfile.mistakeProfile),
       sessionMistakeProfile,
       previousMistakeProfile,
+      previousMasteredWords,
       mistakes: sessionMistakes,
       coachSummary: "",
       coachSummarySource: "fallback",
@@ -299,7 +303,7 @@ export default function SessionPage() {
       )}
 
       {isAnswered && question.kind !== "repair" && correctForCurrent && (
-        <p className="mt-4 rounded-2xl border border-accent/30 bg-accentSoft/60 p-4 text-center text-sm font-semibold text-accent">
+        <p className="mt-4 rounded-2xl border border-success/25 bg-successSoft/70 p-4 text-center font-display text-sm font-bold text-success">
           KNOWN — 正解です
         </p>
       )}
@@ -319,7 +323,7 @@ export default function SessionPage() {
           type="button"
           onClick={handleNext}
           disabled={isDiagnosing || isFinishing}
-          className="mt-2 rounded-full bg-ink px-6 py-4 text-center text-base font-bold text-paper transition-opacity disabled:opacity-50"
+          className="mt-2 rounded-full bg-gradient-to-b from-primary to-primaryDark px-6 py-4 text-center font-display text-base font-bold text-white shadow-md shadow-primary/25 transition-all disabled:opacity-50"
         >
           {isFinishing
             ? "結果をまとめています…"

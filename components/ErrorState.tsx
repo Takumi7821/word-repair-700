@@ -11,7 +11,7 @@ export function ErrorState({ message, onRetry }: Props) {
         <button
           type="button"
           onClick={onRetry}
-          className="rounded-full bg-ink px-4 py-2 text-sm font-medium text-paper"
+          className="rounded-full bg-gradient-to-b from-primary to-primaryDark px-4 py-2 text-sm font-medium text-white shadow-sm shadow-primary/30"
         >
           もう一度試す
         </button>

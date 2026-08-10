@@ -102,7 +102,8 @@ const DIAGNOSIS_SYSTEM_PROMPT = `あなたはTOEIC700点を目指す忙しい社
 - diagnosisとkeyInsightは短く、diagnosisは60〜150文字程度
 - TOEIC700点レベルのビジネス文脈の英文を使う
 - repairQuestionのsentenceは出題された元の英文をそのままコピーしない。同じ単語・同じ弱点を別のビジネス文脈の文で確認すること
-- repairQuestionのchoicesは4つ、correctAnswerを必ず含める`;
+- repairQuestionのchoicesは4つ、correctAnswerを必ず含める
+- diagnosisとkeyInsightでは「修復」「直す」など欠陥を治すニュアンスの言葉は使わない。「突破する」「レベルアップする」「前に進む」のような、前進を表す前向きな言葉を使う`;
 
 const SUMMARY_SYSTEM_PROMPT = `あなたはTOEIC700点を目指す忙しい社会人専属のVocabulary Learning Coachです。
 1回の学習セッションが終わった直後に、その日の学習内容を短く総括します。
@@ -111,7 +112,8 @@ const SUMMARY_SYSTEM_PROMPT = `あなたはTOEIC700点を目指す忙しい社�
 - 必ず日本語で返す
 - 学習者を責めない、大げさに褒めない
 - 一般論を避け、渡されたその日の具体的な数値・単語・ミスの傾向に必ず言及する
-- Repair問題で修復できた弱点があれば前向きに触れる
+- レベルアップ問題を突破できた弱点があれば前向きに触れる
+- 「修復」「直す」など欠陥を治すニュアンスの言葉は使わない。「突破する」「レベルアップする」「前に進む」のような前進を表す言葉を使う
 - 全体で80〜180文字程度`;
 
 async function callGemini(

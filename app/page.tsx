@@ -2,39 +2,64 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { MilestoneTrack } from "@/components/MilestoneTrack";
 import { ReadyGauge } from "@/components/ReadyGauge";
-import { computeReadyScore, getAllWordHistories, getUserProfile } from "@/lib/storage";
+import { getMilestoneProgress, type MilestoneProgress } from "@/lib/milestones";
+import {
+  computeReadyScore,
+  getAllWordHistories,
+  getUserProfile,
+  resetAllProgress,
+} from "@/lib/storage";
 import type { UserProfile } from "@/lib/types";
 
 type HomeData = {
   profile: UserProfile;
   readyScore: number;
   fragileCount: number;
+  milestone: MilestoneProgress;
 };
+
+function loadHomeData(): HomeData {
+  const profile = getUserProfile();
+  const histories = getAllWordHistories();
+  const fragileCount = histories.filter((h) => h.masteryStatus === "fragile").length;
+  return {
+    profile,
+    readyScore: computeReadyScore(profile),
+    fragileCount,
+    milestone: getMilestoneProgress(profile.masteredWords),
+  };
+}
 
 export default function HomePage() {
   const [data, setData] = useState<HomeData | null>(null);
+  const [confirmResetOpen, setConfirmResetOpen] = useState(false);
 
   useEffect(() => {
-    const profile = getUserProfile();
-    const histories = getAllWordHistories();
-    const fragileCount = histories.filter((h) => h.masteryStatus === "fragile").length;
-    setData({ profile, readyScore: computeReadyScore(profile), fragileCount });
+    setData(loadHomeData());
   }, []);
 
   const hasPlayedBefore = (data?.profile.totalSessions ?? 0) > 0;
 
+  function handleReset() {
+    resetAllProgress();
+    setConfirmResetOpen(false);
+    setData(loadHomeData());
+  }
+
   return (
     <main className="flex flex-col gap-6 pt-4">
       <header>
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+        <p className="font-display text-xs font-bold uppercase tracking-[0.2em] text-primary">
           Word Repair 700
         </p>
         <h1 className="mt-2 text-2xl font-extrabold text-ink sm:text-3xl">
           間違いを、次の3問で直す。
         </h1>
         <p className="mt-2 text-sm text-ink/60">
-          TOEIC700点を目指す社会人のための、AI弱点修復型の英単語トレーニング。
+          TOEIC700点を目指す社会人のための、AI弱点レベルアップ型の英単語トレーニング。
         </p>
       </header>
 
@@ -43,22 +68,29 @@ export default function HomePage() {
           <ReadyGauge score={data.readyScore} />
 
           <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-2xl border border-ink/10 bg-white/70 p-4">
-              <p className="text-2xl font-extrabold text-ink">{data.profile.masteredWords}</p>
+            <div className="rounded-2xl border border-ink/8 bg-white/80 p-4">
+              <p className="font-display text-2xl font-extrabold text-primary">
+                {data.profile.masteredWords}
+              </p>
               <p className="mt-1 text-xs text-ink/50">習得済み単語</p>
             </div>
-            <div className="rounded-2xl border border-ink/10 bg-white/70 p-4">
-              <p className="text-2xl font-extrabold text-weak">{data.fragileCount}</p>
-              <p className="mt-1 text-xs text-ink/50">修復待ちの単語</p>
+            <div className="rounded-2xl border border-ink/8 bg-white/80 p-4">
+              <p className="font-display text-2xl font-extrabold text-weak">
+                {data.fragileCount}
+              </p>
+              <p className="mt-1 text-xs text-ink/50">レベルアップ待ちの単語</p>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-ink/10 bg-white/70 p-4 text-sm text-ink/70">
+          <MilestoneTrack progress={data.milestone} />
+
+          <div className="rounded-2xl border border-ink/8 bg-white/80 p-4 text-sm text-ink/70">
             {hasPlayedBefore ? (
               <p>
-                これまでに<span className="font-semibold text-ink">{data.profile.totalSessions}</span>
-                回のセッションを完了。直近のRepair成功数は
-                <span className="font-semibold text-repair">
+                これまでに
+                <span className="font-semibold text-ink">{data.profile.totalSessions}</span>
+                回のセッションを完了。直近のレベルアップ数は
+                <span className="font-semibold text-levelup">
                   {data.profile.latestSessionResult?.repairedCount ?? 0}
                 </span>
                 件です。
@@ -75,7 +107,7 @@ export default function HomePage() {
       <div className="mt-2 flex flex-col gap-3">
         <Link
           href="/session"
-          className="rounded-full bg-ink px-6 py-4 text-center text-base font-bold text-paper shadow-sm transition-transform active:scale-[0.98]"
+          className="rounded-full bg-gradient-to-b from-primary to-primaryDark px-6 py-4 text-center font-display text-base font-bold text-white shadow-lg shadow-primary/30 transition-transform active:scale-[0.98]"
         >
           今日の10問を始める
         </Link>
@@ -87,6 +119,26 @@ export default function HomePage() {
           単語帳を見る
         </Link>
       </div>
+
+      {hasPlayedBefore && (
+        <button
+          type="button"
+          onClick={() => setConfirmResetOpen(true)}
+          className="mt-2 text-center text-xs text-ink/30 underline-offset-2 hover:text-weak hover:underline"
+        >
+          学習データをリセット
+        </button>
+      )}
+
+      <ConfirmDialog
+        open={confirmResetOpen}
+        title="学習データをリセットしますか？"
+        message="習得済み単語、Mistake DNA、マイルストーンなど、これまでの学習記録がすべて削除されます。この操作は元に戻せません。"
+        confirmLabel="リセットする"
+        danger
+        onConfirm={handleReset}
+        onCancel={() => setConfirmResetOpen(false)}
+      />
     </main>
   );
 }
